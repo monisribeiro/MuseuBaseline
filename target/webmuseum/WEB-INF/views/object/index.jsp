@@ -48,7 +48,7 @@ and open the template in the editor.
 	<spring:url value="/resources/js/lib/angular-animate.js" var="angularAnimateJs" />
         <spring:url value="/resources/ui-bootstrap-tpls-0.13.4.js" var="bootstrapUi" />
         <spring:url value="/resources/js/app.js" var="appJs" />
-        <spring:url value="/resources/imgs/proc.jpg" var="image" />
+        <spring:url value="/resources/imgs/04_Proclamação_da_República_by_Benedito_Calixto_1893.jpg" var="image" />
 	
         <link href="${bootstrapMinCss}" rel="stylesheet" />
         <link href="${bootstrapThemeCss}" rel="stylesheet" />

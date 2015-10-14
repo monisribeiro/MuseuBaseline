@@ -56,21 +56,20 @@ and open the template in the editor.
     <script type="text/ng-template" id="myModalContent.html">
         <div class="modal-header" style=" background-color:#195E63;" >
             <button ng-click="closeModal()" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" style="color:#ECE1C3">Modal title</h4>
+            <h4 class="modal-title" style="color:#ECE1C3">{{title}}</h4>
         </div>
         <div class="modal-body imageShown" style="height:80%">
             <div class="left-modal"> 
                     <img  src="{{image}}" class="thumbnail img-responsive">
                 </div>
             <div class="right-modal" >
-                <h3>{{title}}</h3>
                 <div class="right-modal-p pre-scrollable" >
                     <p> {{text}} </p>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button ng-click="openSecondModal()" type="button" class="btn btn-primary" style=" background-color:#195E63;">
+            <button ng-disabled="{{desafioExiste}}" ng-click="openSecondModal()" type="button" class="btn btn-primary" style=" background-color:#195E63;">
                 Desafio
             </button>
         </div>
@@ -78,47 +77,43 @@ and open the template in the editor.
     <script type="text/ng-template" id="myModalDesafio.html">
         <div class="modal-header" style=" background-color:#195E63">
             <button ng-click="closeModal()" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel" style="color:#ECE1C3">Desafio</h4>
+            <h4 class="modal-title" id="myModalLabel" style="color:#ECE1C3">{{name}}</h4>
         </div>
         <div class="modal-body">
             <div class="row">
                 <div class="col-sm-6">
                     <h5 style="text-align: left; color:#000;"><b>Sobre a imagem, responda:</b></h5>
-                    <br>
-                    <p style="text-align: justify;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat?</p>
-                    <br>
-
-                    <form>
+                    <div class="pre-scrollable">
+                    <p style="text-align: justify; margin-right:10px; height:120px;">{{question}}</p>
+                    </div>    
+                    <form >
                         <div class="radio">
-                            <label><input type="radio" name="resposta" value="resp1"> Resposta1</label>
+                            <label><input type="radio" name="resposta" value="resp1" ng-disabled="respostasDisabled" ng-value="true" ng-model="resp1model"> {{resp1}}</label>
                         </div>
                         <div class="radio">
-                            <label><input type="radio" name="resposta" value="resp2"> Resposta2</label>
+                            <label><input type="radio" name="resposta" value="resp2" ng-disabled="respostasDisabled" ng-value="true" ng-model="resp2model"> {{resp2}}</label>
                         </div>
                         <div class="radio">
-                            <label><input type="radio" name="resposta" value="resp3"> Resposta3</label>
+                            <label><input type="radio" name="resposta" value="resp3" ng-disabled="respostasDisabled" ng-value="true" ng-model="resp3model"> {{resp3}}</label>
                         </div>
                         <div class="radio">
-                            <label><input type="radio" name="resposta" value="resp4"> Resposta4</label>
+                            <label><input type="radio" name="resposta" value="resp4" ng-disabled="respostasDisabled" ng-value="true" ng-model="resp4model"> {{resp4}}</label>
                         </div>
                     </form> 
+                    <div class="{{alerttype}}" ng-hide="showAlert">{{alertmsg}}</div>
 
                 </div>
-                 <div class="col-sm-6">
+                 <div class="col-sm-6 image-desafio">
                     <img src="{{image}}" class="thumbnail img-responsive">
-                    <div class="caption">
-                        <h3 style=" text-align: center;color:#000 !important;">Proclamação da República</h3>
-                        <p hidden="true" >Proclamação da República</p>
-                    </div>
                 </div>
             </div>
 
 
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" style=" background-color:#195E63;">
-                Confira a resposta
-            </button>
+                <button type="button" class="btn btn-primary" ng-click="confereRespostas()" style=" background-color:#195E63;">
+                    Confira a resposta
+                </button>
         </div>
     </script>
     <c:set var="contextPath" value="${pageContext.request.contextPath }" />
@@ -165,11 +160,11 @@ and open the template in the editor.
                         <button type="submit" class="btn btn-default btnTour" disabled="true">Iniciar Tour</button>
                     </div>
                     <div class="col-sm-8" >
-                        <div style="display:inline-block;margin-top:20px;">
+                        <div style="display:inline-block;margin-top:20px;width:100%;padding-left:10px;">
                             
                            <form  action="search" method="post">
-                                 <input type="text" name="search" class="form-control" style="display:block; float:left; width:70%" placeholder="Search">
-                                <input type="submit" class="btn btn-default" value="Ok" style="display:block; float:right; width:30%"/>
+                                 <input type="text" name="search" class="form-control" style="display:block; float:left; width:80%" placeholder="Buscar por..">
+                                <input type="submit" class="btn btn-default" value="Ok" style="display:block; float:right; width:20%"/>
                               </form>
                         </div>
                      </div><!-- /input-group -->
@@ -180,7 +175,7 @@ and open the template in the editor.
                  <div class="col-sm-6 col-md-4">
                     <div class="thumbnail">
                         <a title="Proclamação da República" href="">
-                        <img ng-click="openImage('<c:url value="/resources/imgs/${object.getUrlAddress()}" />', '${object.getText()}', '${object.getName()}', 'lg')" src="<c:url value="/resources/imgs/${object.getUrlAddress()}" />" class="thumbnail img-responsive">
+                        <img ng-click="openImage('<c:url value="/resources/${object.getUrlAddress()}" />', '${object.getText()}', '${object.getName()}', 'lg')" src="<c:url value="/resources/${object.getUrlAddress()}" />" class="thumbnail img-responsive">
                       </a>
                       <div class="caption">
                         <h3>${object.getName()}</h3>

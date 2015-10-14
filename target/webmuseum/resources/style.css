@@ -19,9 +19,19 @@ html, body, .container-fluid{
     }
 }
 
+.image-desafio > img {
+    margin:10px;
+    width:95%;
+}
+
+.alert{
+    margin:0px;
+    text-align:left !important;
+}
+
 .left-modal {
     display:inline-block !important;
-    width:50%;
+    width:40%;
     height:200px !important;
     vertical-align:middle;
     text-align: center;
@@ -37,13 +47,13 @@ html, body, .container-fluid{
 
 
 .right-modal{
-     width:45%;
+     width:55%;
     height:200px !important;
     float:right;
     margin-right:15px;
 }
 
-h3{
+.caption > h3{
     margin-top: 0px !important;
     max-height:70px;
      overflow: hidden;
@@ -53,8 +63,9 @@ h3{
 
 .right-modal-p > p{
     text-align: justify;
-    padding-right:5px;
-    height:140px !important;
+    padding-right:10px;
+    padding-top:10px;
+    height:200px !important;
 }
 
 .thumbnail{
@@ -236,6 +247,10 @@ h2{
     margin-left:20px !important;
 }
 
+.right-modal > h3{
+    margin-top:0px;
+}
+
 .btn-default{
     margin-bottom: 10px;
 }
@@ -251,10 +266,10 @@ div.row div.well{
 } 
 
 .row > .col-md-4 {
-    width:24.5% !important;
+    width:24.6% !important;
 }
 
-.col-md-4, col-sm-6 {
+.col-md-4, .col-sm-6 , .col-sm-8{
    padding:0px;
 }
 
