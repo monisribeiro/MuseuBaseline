@@ -31,11 +31,40 @@ public class MuseologicalObjectController {
         
         @RequestMapping("object/hello")
 	public ModelAndView index() {
-		return new ModelAndView("object/index");
+            ModelAndView mv =  new ModelAndView("object/index");
+            List<MuseologicalObject> objects = service.listObjects();
+            System.out.println("objects " + objects.get(0).getText());
+            mv.addObject("list", objects);
+            // TODO Distinção entre tipos, objeto, imagem e texto
+            DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            mv.addObject("format", sdf);
+            return mv;
+	}
+        
+        @RequestMapping("object/sobre")
+	public ModelAndView sobre() {
+            return new ModelAndView("object/sobre");
+	}
+        
+        @RequestMapping("object/perguntas")
+	public ModelAndView perguntas() {
+            return new ModelAndView("object/perguntas");
 	}
         
          @RequestMapping("object/galeria")
 	public ModelAndView galeria() {
+		ModelAndView mv =  new ModelAndView("object/galeria");
+                List<MuseologicalObject> objects = service.listObjects();
+                System.out.println("objects " + objects.get(0).getText());
+		mv.addObject("list", objects);
+                // TODO Distinção entre tipos, objeto, imagem e texto
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		mv.addObject("format", sdf);
+		return mv;
+	}
+        
+          @RequestMapping("object/tour")
+	public ModelAndView tour() {
 		ModelAndView mv =  new ModelAndView("object/galeria");
                 List<MuseologicalObject> objects = service.listObjects();
                 System.out.println("objects " + objects.get(0).getText());

@@ -21,9 +21,17 @@ html, body, .container-fluid{
 
 .image-desafio > img {
     margin:10px;
-    width:95%;
+    height:400px;
+    margin-left:auto;
+    margin-right:auto;
 }
 
+.image-desafio-img > img {
+    margin:10px;
+    height:200px;
+    margin-left:auto;
+    margin-right:auto;
+}
 .alert{
     margin:0px;
     text-align:left !important;
@@ -31,11 +39,16 @@ html, body, .container-fluid{
 
 .left-modal {
     display:inline-block !important;
-    width:40%;
+    width:50%;
     height:200px !important;
     vertical-align:middle;
     text-align: center;
     
+}
+
+.radio label { 
+    padding-left:0px;
+    padding-right:10px;
 }
 
 .left-modal >img{
@@ -45,12 +58,36 @@ html, body, .container-fluid{
     height:200px !important;
 }
 
+.button-hide{
+    font-weight: bolder;
+    color:#195E63;
+    font-size: 2em;
+    background-color: transparent;
+    border:none;
+}
+
+.modal-body{
+    padding:0px;
+    padding-top:15px;
+    padding-bottom:15px;
+}
+
+.modal-body-challenge{
+    padding-right:15px;
+    padding-left:15px;
+}
 
 .right-modal{
-     width:55%;
-    height:200px !important;
+     width:45%;
+    height:350px !important;
     float:right;
     margin-right:15px;
+}
+
+.coments {
+    height: 100px;
+    width:100%;
+    text-align: start;
 }
 
 .caption > h3{
@@ -65,7 +102,7 @@ html, body, .container-fluid{
     text-align: justify;
     padding-right:10px;
     padding-top:10px;
-    height:200px !important;
+    height:330px !important;
 }
 
 .thumbnail{

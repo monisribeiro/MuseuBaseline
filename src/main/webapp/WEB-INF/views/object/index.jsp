@@ -8,7 +8,7 @@ and open the template in the editor.
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<html>
+<html ng-app="app">
     <head>
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
@@ -47,6 +47,7 @@ and open the template in the editor.
         <spring:url value="/resources/js/lib/angular-resource.js" var="angularResourceJs" />
 	<spring:url value="/resources/js/lib/angular-animate.js" var="angularAnimateJs" />
         <spring:url value="/resources/ui-bootstrap-tpls-0.13.4.js" var="bootstrapUi" />
+        <spring:url value="/resources/js/ngDraggable.js" var="ngDraggable" />
         <spring:url value="/resources/js/app.js" var="appJs" />
         <spring:url value="/resources/imgs/04_Proclamação_da_República_by_Benedito_Calixto_1893.jpg" var="image" />
 	
@@ -63,14 +64,16 @@ and open the template in the editor.
         <script src="${angularRouteJs}"></script>
         <script src="${angularResourceJs}"></script>
         <script src="${angularAnimateJs}"></script>
+        <script src="${bootstrapUi}"></script>        
         <script src="${bootstrapUi}"></script>
         <script src="${appJs}"></script>
 
     </head>
-    <body>
+    <body ng-controller="MainController">
         <!--menu-->
         <c:set var="contextPath" value="${pageContext.request.contextPath }" />
-        <div  class="container-fluid" ng-app="app">
+        
+        <div  class="container-fluid" >
              <div class="col-sm-3" >
                 <div id="menu-title">
                     <div class="row">
@@ -83,14 +86,14 @@ and open the template in the editor.
                     <ul id="sidebar" class="nav nav-pills nav-stacked">
                         
                         <li><a href="${contextPath}/object/galeria">Galeria</a></li>
-                        <li><a href="${contextPath}/object/desafios">Desafios</a></li>
+                        <li><a href="${contextPath}/object/desafios" >Desafios</a></li>
                         <li><a href="${contextPath}/object/perguntas">Perguntas</a></li>
-                        <li><a href="${contextPath}/object/sobreMuseu">Sobre o museu</a></li>
-                        <li><a href="${contextPath}/object/sobreNos">Sobre nós</a></li>
+                        <li><a href="${contextPath}/object/sobre">Sobre o museu</a></li>
+                        <li><a href="${contextPath}/object/sobre#nos">Sobre nós</a></li>
                     </ul>
                 </div>
             </div>
-             <div id ="main" class ="col-sm-9" ng-controller="MainController">
+             <div id ="main" class ="col-sm-9" >
                 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner" role="listbox">
@@ -123,8 +126,8 @@ and open the template in the editor.
                                     <div class="row">
                                         <div class="col-sm-4"></div>
                                         <div class="col-sm-4">
-                                            <button type="button" ng-click="redirectGaleria()" class="btn btn-primary">
-                                                Inicie o tour
+                                            <button type="button" ng-click="redirectGaleria()" class="btn btn-primary" >
+                                                <a href="${contextPath}/object/tour" >Inicie o tour</a>
                                             </button>
                                         </div>
                                         <div class="col-sm-2"></div>
@@ -135,7 +138,7 @@ and open the template in the editor.
                                     <div class="row">
                                         <div class="col-sm-2"></div>
                                         <div class="col-sm-4">
-                                            <button type="button" ng-click="redirectDesafios()" class="btn btn-primary">
+                                            <button type="button" ng-click="redirectDesafios()" class="btn btn-primary" disabled="true">
                                                  Teste seus conhecimentos
                                             </button>
                                         </div>
