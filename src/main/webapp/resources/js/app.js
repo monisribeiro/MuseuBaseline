@@ -1,10 +1,12 @@
-angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ngDraggable'])
+angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap'])
         .constant('user', {points : 0}) 
         .constant('perg1Disabled', {state: false})
         .constant('perg2Disabled', {state: false})
-        .constant('perg3Disabled', {state: false})  
-        .constant('contGuia', {cont: 0})  
-        .constant('galeryImages', {images : []})
+        .constant('perg3Disabled', {state: false}) 
+        .constant('perg4Disabled', {state: false})   
+        .constant('navegaDesafios', {state: false})   
+        .constant('contGuia', {cont: 0, contD: 0})  
+        .constant('galeryImages', {images : [], desafios: []})
         .config(['$routeProvider', '$compileProvider',
   function($routeProvider, $compileProvider) {
       
@@ -15,34 +17,70 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
   .controller('TestController', ['$scope', '$location', function($scope, $location){
           alert($location.url);
   }])
-      .controller('MainController', ['$scope', function($scope){
+      .controller('MainController', ['$scope', '$location', function($scope, $location){
+          $scope.redirectDesafios = redirectDesafios;
+          $scope.redirectGaleria = redirectGaleria;
           
+          function redirectDesafios(){
+              
+              $location.path("desafios");
+          }
+          
+          function redirectGaleria(){
+              console.log($location.url())
+              $location.path("galeria");
+          }
          
   }])
-    .controller('GalleryController', ['$scope', '$modal', 'contGuia', 'galeryImages', '$rootScope', '$location', '$window' ,
-    function($scope, $modal, contGuia, galeryImages, $rootScope, $location, $window){
+    .controller('GalleryController', ['$scope', '$modal', 'contGuia', 'galeryImages', '$rootScope', '$location', '$window' ,'navegaDesafios', 
+    function($scope, $modal, contGuia, galeryImages, $rootScope, $location, $window, navegaDesafios){
         
         var opened = false;
+         var dOpened = false;
         
         var location = $window.location.pathname.split('/'); 
         if(location[location.length-1] == 'tour'){ opened = true;  
             console.log("open");
         }
-                    
-                    
+        
+        if(location[location.length-1] == 'desafios'){ dOpened = true;  
+            console.log("open");
+        }
+                           
         console.log("oi");
             $scope.initList = initList;
             $scope.checkOpened = checkOpened;
           var cont = 0 ;
+          var des = 0;
           var images = [];
           
            $rootScope.$on("OpenTour", function(){
                 openTour();
              });
+             
+             $rootScope.$on("OpenDesafios", function(){
+                openDesafios();
+             });
  
             function checkOpened(){
+                
+                 var desafios = [];
+                 angular.forEach(galeryImages.images, function(value, key){
+                    console.log(des + value.name)
+                    var desafio = {id:des ,url: value.url, name : value.name } 
+                    desafios.push(desafio);
+                    des++;
+                });
+                galeryImages.desafios = desafios;
+                
                 if(opened){
-                openTour();
+                    
+                 navegaDesafios.state = false;
+                    openTour();
+                } else if (dOpened){
+                     navegaDesafios.state = true;
+                    console.log("hi")
+                    openDesafios();
                 }
             }
             function initList(url, text, name){
@@ -57,19 +95,56 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
           $scope.openTour = openTour;
           
         function openTour(){
+            
+                 navegaDesafios.state = false;
               console.log("openTour" + galeryImages.images.length);
               angular.forEach(galeryImages.images, function(value, key){
                 if(value.id == contGuia.cont){
                   console.log("log");
-                  openImage('/webmuseum/resources/' + value.url, '', value.name, 'lg');
+                  openImage('/MuseuBaseline/resources/' + value.url, '', value.name, 'lg');
                }
             });
+          };
+          
+          $scope.openDesafios = openDesafios;
+                
+          function openDesafios(){ 
+                 navegaDesafios.state = true;
+                 console.log("oi" +  galeryImages.desafios)
+                  angular.forEach(galeryImages.desafios, function(value, key){
+                      
+                 console.log("oi" + value.id + " " + contGuia.contD)
+                        if(value.id == contGuia.contD){
+                          console.log("log");
+                          $scope.openDesafio('/MuseuBaseline/resources/' + value.url, value.name);
+                       }
+                    });
+          }
+          
+          $scope.openDesafio = function(url, name){
+                 navegaDesafios.state = true;
+               var modalInstance = $modal.open({
+               animation: $scope.animationsEnabled,
+               size:'lg', 
+               templateUrl: 'myModalDesafio.html', 
+               controller: 'DesafioController', 
+               resolve: {
+                   image: function(){
+                       return url;
+                   },
+                   name: function(){
+                       return name;
+                   }
+               }
+               
+             });
           };
           
           $scope.openImage = openImage;
               
             
             function openImage(img, text, name, size){
+                 navegaDesafios.state = false;
             console.log("open" + img);
             angular.forEach(galeryImages.images, function(value, key){
                 if(value.name == name){
@@ -142,8 +217,9 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
           $scope.comments = galeryImages.images[contGuia.cont].comments;
           
           $scope.leaveComment = function(){
+              if( $scope.user.comment != null &&  $scope.user.comment != "")
               $scope.comments.push({name: "Anônimo",comment: $scope.user.comment});
-              $scope.user.comment = "";
+              $scope.user.comment = null;
               galeryImages.images[contGuia.cont].comments = $scope.comments;
           };
           
@@ -155,6 +231,7 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
           $scope.prev = function(){
               contGuia.cont--;
               closeModal();
+              
              $rootScope.$emit("OpenTour", {});
           };
           
@@ -189,45 +266,21 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
               console.log("changeText" 
                       + name)
               switch(name.trim()){
-                  case "A Independência do Brasil. Independence of Brazil, 1888 - Pedro Américo.":
-                      $scope.text = "A Independência é um processo ocorrido de 1821 a 1825 e coloca em violenta oposição os Reinos do Brasil e de Portugal. Depois de anos de conflito armado, Portugal finalmente cedeu, e em 29 de agosto de 1825 foi assinado o Tratado de Amizade e Aliança.";
-                      $scope.desafioExiste=true;
+                  case "O Palácio do Catete":
+                      $scope.text = "O Museu da República fica localizado no Palácio do Catete, no Rio de Janeiro. Foi sede do poder executivo brasileiro de 1897 a 1960. A partir dessa data, foi transferida para Brasília.";
+
                   break;
-                  case "Primeiro reinado. Abdicação de Pedro I do Brasil - Aurélio de Figueiredo.":
-                      $scope.text = "O primeiro reinado do Brasil é o nome dado ao período em que D. Pedro I governou o Brasil como Imperador, entre 1822 e 1831, ano de sua abdicação.  Foi marcado por uma grande crise econômica, financeira, social e política.";
-                      $scope.desafioExiste=true;
+                  case "A Pátria":
+                      $scope.text = "O quadro 'A Pátria' retrata o nascimento da República. Para tanto, Pedro Bruno usa diversos recursos, dentre os quais temos mulheres, que remetem à Marianne (símbolo da Revolução Francesa), e a criança segurando a bandeira, que representa o futuro.";
+
                 break;
-                  case "Período regencial. A primeira caricatura do Brasil regência - Manuel de Araújo.":
-                      $scope.desafioExiste=false;
-                      $scope.text = "O período regencial é como ficou conhecido o decênio de 1831 a 1840. Nele se firmaram a unidade territorial do país e a estruturação das Forças Armadas, além de serem discutidos o grau de autonomia das províncias e a centralização do poder.";
+                  case "O quarto de Vargas":
+
+                      $scope.text = "Getúlio Vargas governou o Brasil entre 1930 e 1945, período conhecido como Era Vargas, que compreende a Segunda e Terceira República. Mudando o rumo da história, Vargas se matou em se quarto, em 24 de agosto de 1954.";
                   break;
-                  case "Segundo reinado. D. Pedro II na abertura da Assembléia Geral - Pedro Américo.":
-                      $scope.desafioExiste=false;
-                      $scope.text = "Período que vai do final do regencial (1831-1840) à proclamação da república (1889). Iniciou em 23 de julho de 1840, com a maioridade de Pedro de Alcântara, e teve o seu término em 15 de novembro de 1889, com a proclamação da república brasileira.";
-                  break;
-                  case "Proclamação da República - Benedito Calixto.":
-                      $scope.desafioExiste=true;
-                      $scope.text = "A Proclamação da República Brasileira foi um levante político-militar ocorrido em 15 de novembro de 1889 que derrubou a monarquia constitucional parlamentarista e, por conseguinte, encerrou a soberania do imperador D. Pedro II.";
-                  break;
-                  case "A Bandeira dos Estado Unidos do Brasil.":
-                      $scope.desafioExiste=false;
-                      $scope.text = "A Primeira República Brasileira, normalmente chamada de República Velha, foi o período da história do Brasil que se estendeu da proclamação da República até a Revolução de 1930.";
-                  break;
-                  case "Getúlio Vargas aos 27 anos.":
-                      $scope.desafioExiste=false;
-                      $scope.text = "Era Vargas é o período da história do Brasil entre 1930 e 1945, quando Getúlio Vargas governou o Brasil por 15 anos e de forma contínua. Compreende a Segunda e Terceira República (Estado Novo).";
-                  break;
-                  case "Esplanada dos Ministérios de Brasília, em 1959.":
-                      $scope.desafioExiste=true;
-                      $scope.text = "O período conhecido como República Populista se inicia com a renúncia forçada do Presidente Getúlio Vargas, em outubro de 1945, e termina em 31 de março de 1964, pelas forças militares que iniciaram o regime militar no Brasil.";
-                  break;
-                  case "Golpe de 1964.":
-                      $scope.desafioExiste=true;
-                      $scope.text = "A Ditadura militar no Brasil foi o regime instaurado em 1 de abril de 1964, e durou até 15 de março de 1985. De caráter autoritário e nacionalista, acabou quando J. Sarney assumiu a presidência, o que deu início à Nova República.";
-                  break;
-                  case "A Constituição de 1988.":
-                      $scope.desafioExiste=true;
-                      $scope.text = "A Nova República é o nome do período da História do Brasil que se seguiu ao fim da ditadura militar. É caracterizado pela ampla democratização política do Brasil e sua estabilização econômica.";
+                  case "O Salão Nobre":
+
+                      $scope.text = "O Salão Nobre relembra a vida social e o luxo da corte. Como sede da Presidência, recebeu sobre as portas as Armas da República. Em 1938, o painel do teto foi refeito pelo pintor acadêmico brasileiro Armando Vianna.";
                   break;
               default: 
                   $scope.text = "";
@@ -240,13 +293,11 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
                 $modalInstance.dismiss('closeModal');
            }
    }])
-   .controller('DesafioController', ['$scope',  '$modalInstance', '$modal', 'image', 'name', 'user', 'perg1Disabled', 'perg2Disabled', 'perg3Disabled', 
-       function($scope, $modalInstance, $modal, image, name, user, perg1Disabled, perg2Disabled, perg3Disabled){
+   .controller('DesafioController', ['$scope',  '$modalInstance', '$modal', 'image', 'name', 'user', 'perg1Disabled', 'navegaDesafios', 
+    'perg2Disabled', 'perg3Disabled', 'perg4Disabled','contGuia', 'galeryImages', '$rootScope', 
+       function($scope, $modalInstance, $modal, image, name, user, perg1Disabled, navegaDesafios, perg2Disabled, perg3Disabled, perg4Disabled, contGuia, galeryImages, $rootScope){
             $scope.centerAnchor = true;
         $scope.toggleCenterAnchor = function () {$scope.centerAnchor = !$scope.centerAnchor}
-        $scope.draggableObjects = [{name : '/webmuseum/resources/imgs/resp1.png'}, {name : '/webmuseum/resources/imgs/resp2.png'},
-            {name : '/webmuseum/resources/imgs/resp3.png'},{name : '/webmuseum/resources/imgs/resp4.png'}];
-        $scope.droppedObjects1 = [];
            $scope.respostasDisabled = false;
           $scope.resp1model = false;
           $scope.resp2model = false;
@@ -254,13 +305,34 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
           $scope.resp4model = false;
           $scope.draggableDiv = false;
           $scope.perguntaImagem = false; 
+          $scope.navegaDesafios =  navegaDesafios.state;
+         
           $scope.perguntaTeorica = false; 
           $scope.alertmsg = "Resposta correta";
           $scope.alerttype = "alert alert-danger"
            $scope.image = image;
-           $scope.imageResp = '/webmuseum/resources/imgs/drag-and-drop.png';
+           $scope.imageResp = '/MuseuBaseline/resources/imgs/drag-and-drop.png';
         $scope.showAlert = true; 
+        $scope.respostaCorreta = false;
           $scope.name = name;
+          $scope.contZero =  contGuia.contD == 0;
+          $scope.contFull = contGuia.contD == galeryImages.desafios.length-1;
+          
+          if($scope.contFull) contGuia.contD = 0;
+          
+          $scope.prev = function(){
+              contGuia.contD = contGuia.contD-1;
+              closeModal();
+              console.log(contGuia.contD)
+             $rootScope.$emit("OpenDesafios", {});
+          };
+          
+          $scope.next = function(){
+              contGuia.contD = contGuia.contD+1;
+              closeModal();
+             $rootScope.$emit("OpenDesafios", {});
+          };
+          
           
            $scope.onDragComplete=function(data,evt){
                 console.log("drag success, data:", data);
@@ -279,48 +351,50 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
           
           function changeText(){
               switch(name.trim()){
-                  case "Período regencial. A primeira caricatura do Brasil regência - Manuel de Araújo.":
-                      $scope.question = "Qual o decênio conhecido como período regencial?";
-                      $scope.resp1 = "1861-1870";
-                      $scope.resp2 = "1931-1940";
-                      $scope.resp3 = "1911-1921";
-                      $scope.resp4 = "1831-1840";
+                  case "O Palácio do Catete":
+                      $scope.question = "Associe a imagem do Palácio do Catete à atual sede do poder executivo brasileiro.";
+                      $scope.resp1 = "/MuseuBaseline/resources/imgs/image02.jpg";
+                      $scope.resp4 = "/MuseuBaseline/resources/imgs/image01.jpg";
+                      $scope.resp3 = "/MuseuBaseline/resources/imgs/image03.jpg";
+                      $scope.resp2 = "/MuseuBaseline/resources/imgs/resp006.jpg";
                       $scope.respostasDisabled = perg1Disabled.state;
-                      $scope.perguntaTeorica = true; 
-                      $scope.perguntaImagem = false; 
+                      $scope.respostaCorreta = perg1Disabled.state;
+                      $scope.perguntaTeorica = false; 
+                      $scope.perguntaImagem = true; 
                   break;
-                  case "Segundo reinado. D. Pedro II na abertura da Assembléia Geral - Pedro Américo.":
-                      $scope.question = "Quando se encerrou o período regencial?";
-                      $scope.resp1 = "15 de outubro de 1999";
-                      $scope.resp2 = "15 de setembro de 1939";
-                      $scope.resp3 = "15 de setembro de 1879";
-                      $scope.resp4 = "15 de setembro de 1889";
+                  case "A Pátria":
+                      $scope.question = "Associe o quadro ‘A Pátria’ à imagem que mais se assemelha ao seu significado.";
+                      $scope.resp1 = "/MuseuBaseline/resources/imgs/image00.jpg";
+                      $scope.resp4 = "/MuseuBaseline/resources/imgs/image04.jpg";
+                      $scope.resp3 = "/MuseuBaseline/resources/imgs/image05.jpg";
+                      $scope.resp2 = "/MuseuBaseline/resources/imgs/resp005.jpg";
                       $scope.respostasDisabled = perg2Disabled.state;
-                      $scope.perguntaTeorica = true; 
-                      $scope.perguntaImagem = false; 
+                      $scope.respostaCorreta = perg2Disabled.state;
+                      $scope.perguntaTeorica = false; 
+                      $scope.perguntaImagem = true; 
                   break;
-                  case "Getúlio Vargas aos 27 anos.":
+                  case "O quarto de Vargas":
                       $scope.question = " Quantos anos Vargas ficou no poder?";
                       $scope.resp1 = "11 anos";
                       $scope.resp2 = "12 anos";
                       $scope.resp3 = "13 anos";
                       $scope.resp4 = "15 anos";
                       $scope.respostasDisabled = perg3Disabled.state;
+                      $scope.respostaCorreta = perg3Disabled.state;
                       $scope.perguntaTeorica = true; 
                       $scope.perguntaImagem = false; 
                   break;
-                  case "A Bandeira dos Estado Unidos do Brasil.":
-                      $scope.question = " Qual a atual bandeira do brasil? (Arraste a imagem correta ao local indicado)";
-                      $scope.respostas = [{resp1 : "/webmuseum/resources/imgs/resp1.png", resp2 : "/webmuseum/resources/imgs/resp2.png",
-                          resp3 : "/webmuseum/resources/imgs/resp3.png",resp4 : "/webmuseum/resources/imgs/resp4.png"}]
-                      $scope.resp1 = "/webmuseum/resources/imgs/resp1.png";
-                      $scope.resp2 = "/webmuseum/resources/imgs/resp2.jpg";
-                      $scope.resp3 = "/webmuseum/resources/imgs/resp3.jpg";
-                      $scope.resp4 = "/webmuseum/resources/imgs/resp4.png";
-                      $scope.respostasDisabled = perg3Disabled.state;
+                  case "O Salão Nobre":
+                      $scope.question = " O piso das principais recepções do Palácio do Catete, posterior sede da Presidência, era caracterizado por:";
+                      $scope.resp1 = "simplicidade";
+                      $scope.resp2 = "humildade";
+                      $scope.resp3 = "informalidade";
+                      $scope.resp4 = "nobreza";
+                      $scope.respostasDisabled = perg4Disabled.state;
+                      $scope.respostaCorreta = perg4Disabled.state;
                       
-                      $scope.perguntaTeorica = false; 
-                      $scope.perguntaImagem = true; 
+                      $scope.perguntaTeorica = true; 
+                      $scope.perguntaImagem = false; 
                       console.log("pergunta" + $scope.perguntaImagem);
                   break;
               default: 
@@ -334,23 +408,29 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
           }
       
            $scope.confereRespostas = function(){
+               console.log(perg4Disabled.state)
                if($scope.resp4model && !$scope.respostasDisabled) { 
                     $scope.showAlert = false; 
                     user.points += 10;
                     $scope.alertmsg = "Sua resposta está correta, parabéns! Sua pontuação é " + user.points;
                     $scope.alerttype = "alert alert-success";
+                    $scope.respostaCorreta = true;
                     $scope.respostasDisabled = true;
                     switch(name.trim()){
-                            case "Período regencial. A primeira caricatura do Brasil regência - Manuel de Araújo.":
+                            case "O Palácio do Catete":
                                 perg1Disabled.state = true;
                                 console.log(perg1Disabled.state);
                             break;
-                            case "Segundo reinado. D. Pedro II na abertura da Assembléia Geral - Pedro Américo.":
+                            case "A Pátria":
                                 perg2Disabled.state = true;
                             break;
-                            case "Getúlio Vargas aos 27 anos.":
+                            case "O quarto de Vargas":
                                 perg3Disabled.state = true;
                             break;
+                            case "O Salão Nobre": 
+                                console.log("changePerg3")
+                                perg4Disabled.state = true;
+                                break;
                         }
                     
                     
@@ -359,25 +439,50 @@ angular.module('app', ['ngRoute', 'ngResource', 'ngAnimate', 'ui.bootstrap', 'ng
                     $scope.alertmsg = "Sua resposta está incorreta, tente novamente!";
                     $scope.alerttype = "alert alert-danger";
                     user.points -= 1;
+                    $scope.respostaCorreta = false;
                 }
+                console.log($scope.respostaCorreta + " " + perg4Disabled.state)
            }
            
-           
+           $scope.closeModal = closeModal;
+                  
+           function closeModal(){
+                $modalInstance.dismiss('closeModal');
+           }
            
    }])
    .controller('AboutCtrl', function ($scope, $location) {
        
       })
-      .controller('QuestionsCtrl', function ($scope, $location) {
+      .controller('QuestionsCtrl', function ($scope, $location, $resource) {
        $scope.nome = "";
        $scope.pergunta = "";
        
-       $scope.perguntas = [];
+        $scope.perguntas = [
+        {
+            nome:'Daniel',
+            data: '12/08/2015',
+            pergunta: 'Quando Getúlio Vargas Morreu?',
+            resposta: 'Em 24 de agosto de 1954'
+        },
+        {
+            nome:'Joana',
+            data:'15/11/2015',
+            pergunta:'Como é o nome do museu mesmo?',
+            resposta:'Museu da República'
+        }
+    ];
+       
+       var emailRequest = $resource("/MuseuBaseline/object/email");
+       
        
        console.log("oi");
        $scope.enviarPergunta = function(){
            var d = new Date();
+           if($scope.pergunta != "" && $scope.nome != "")
            $scope.perguntas.push({"nome" : $scope.nome, "pergunta" : $scope.pergunta, "resposta" : "Aguardando resposta do professor...", "data" : d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear()});
+           
+        emailRequest.save( {name:$scope.nome, pergunta: $scope.pergunta})
            console.log($scope.perguntas);
            $scope.nome="";
            $scope.pergunta="";

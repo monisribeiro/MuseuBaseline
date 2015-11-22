@@ -16,6 +16,7 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <spring:url value="/resources/style.css" var="styleCss" />
+        <spring:url value="/resources/styleMobile.css" var="styleMobileCss" />
         <spring:url value="/resources/bootstrap-theme.css" var="bootstrapThemeCss" />
         <spring:url value="/resources/bootstrap-theme.min.css" var="bootstrapThemeMinCss" />
         <spring:url value="/resources/bootstrap.css" var="bootstrap" />
@@ -44,6 +45,7 @@ and open the template in the editor.
         <link href="${bootstrap}" rel="stylesheet" />
         <link href="${bootstrapMin}" rel="stylesheet" />
 	<link href="${styleCss}" rel="stylesheet" />
+	<link href="${styleMobileCss}" rel="stylesheet" />
         <script src="${jquery}"></script>
         <script src="${bootstrapMin}"></script>
         <script src="${bootstrapMinJs}"></script>
@@ -69,32 +71,24 @@ and open the template in the editor.
                     </div>
                     <div id="navbar" class="navbar-collapse collapse">
                         <ul class="nav navbar-nav navbar-horiz">
-                            <li ><a href="${contextPath}/webmuseum/object/hello">Home</a></li>
-                            <li  ><a href="${contextPath}/webmuseum/object/galeria">Museu</a></li>
-                            <li class="dropdown">
-                                <span dropdown on-toggle="toggled(open)">
-                                    <a href id="simple-dropdown" dropdown-toggle>Desafios<span class="caret"></span></a>
-                                    <ul class="dropdown-menu" aria-labelledby="simple-dropdown">
-                                        <li><a href="${contextPath}/webmuseum/object/desafios">Associe as Imagens</a></li>
-                                        <li><a href="${contextPath}/webmuseum/object/desafios">Teste seu Conhecimento</a></li>
-                                    </ul>
-                                </span>
-                            </li>
-                            <li class="active"><a href="${contextPath}/webmuseum/object/perguntas" >Perguntas</a></li>
-                            <li ><a href="${contextPath}/webmuseum/object/sobre">Sobre</a></li>
+                            <li ><a href="${contextPath}/MuseuBaseline/object/hello">Home</a></li>
+                            <li  ><a href="${contextPath}/MuseuBaseline/object/galeria">Museu</a></li>
+                            <li><a href="${contextPath}/MuseuBaseline/object/desafios">Desafios</a></li>
+                            <li class="active"><a href="${contextPath}/MuseuBaseline/object/perguntas" >Pergunte ao professor</a></li>
+                            <li ><a href="${contextPath}/MuseuBaseline/object/sobre">Sobre o museu</a></li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </div>
-        <div class="container-fluid"  ng-controller="QuestionsCtrl">
+        <div class="container-fluid perguntas"  ng-controller="QuestionsCtrl">
             
             <div class="row" >
-                <div class="col-sm-6">
+                <div class="col-sm-6 museu">
                     <div class="row" id="museu"  style="float:right;">
                         <h2 >Mande sua pergunta para o professor</h2>
                     </div>
-                    <div  style="padding:20px;float:right;padding-right:0px;">
+                    <div class="forms" style="padding:20px;float:right;padding-right:0px;">
                         <div class="col-sm-2" style="text-align:right;padding:0px;margin-top:8px;">
                         Nome: 
                         </div>
@@ -117,9 +111,15 @@ and open the template in the editor.
                     <div class="row" id="museu" style="margin-bottom:0px;">
                         <h4>Perguntas anteriores</h4>
                     </div>
-                    <div class="pre-scrollable" style="height:500px;">
+                    <div class="row perguntasAnteriores">
+                        <div class = "col-sm-5"></div>
+                        <div class = "col-sm-7">
+                            <input type="text" name="search" class="form-control" ng-model="buscaPalavra" style="display:block;float:left;  width:95%; margin-right:50px;" placeholder="Digite a pergunta que deseja procurar">
+                        </div>
+                    </div>
+                    <div class="pre-scrollable" style="height:500px;margin-top:10px;">
                         
-                        <div ng-repeat="pergunta in perguntas" style="margin:10px; border-bottom:1px solid gray;"> 
+                        <div ng-repeat="pergunta in perguntas | filter:buscaPalavra" style="margin:10px; border-bottom:1px solid gray;"> 
                             <div class="col-sm-8"> 
                               De: {{pergunta.nome}}
                             </div>

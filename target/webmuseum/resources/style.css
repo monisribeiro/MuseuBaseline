@@ -98,7 +98,7 @@ html, body, .container-fluid{
   text-overflow: ellipsis;
 }
 
-.right-modal-p > p{
+#text, #textMobile{
     text-align: justify;
     padding-right:10px;
     padding-top:10px;
@@ -322,6 +322,8 @@ div.row div.well{
 #menu-title div.row{
     margin-right: 0px;
     margin-left:0px;
+    
+    
 }
 
 #sidebar.nav > li > a,

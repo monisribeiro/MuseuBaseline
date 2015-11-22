@@ -34,6 +34,7 @@ and open the template in the editor.
         <link href="style.css" rel="stylesheet">
         -->
         <spring:url value="/resources/style.css" var="styleCss" />
+        <spring:url value="/resources/styleMobile.css" var="styleMobileCss" />
         <spring:url value="/resources/bootstrap-theme.css" var="bootstrapThemeCss" />
         <spring:url value="/resources/bootstrap-theme.min.css" var="bootstrapThemeMinCss" />
         <spring:url value="/resources/bootstrap.css" var="bootstrap" />
@@ -49,7 +50,7 @@ and open the template in the editor.
         <spring:url value="/resources/ui-bootstrap-tpls-0.13.4.js" var="bootstrapUi" />
         <spring:url value="/resources/js/ngDraggable.js" var="ngDraggable" />
         <spring:url value="/resources/js/app.js" var="appJs" />
-        <spring:url value="/resources/imgs/04_Proclamação_da_República_by_Benedito_Calixto_1893.jpg" var="image" />
+        <spring:url value="/resources/imgs/musobj4.jpg" var="image" />
 	
         <link href="${bootstrapMinCss}" rel="stylesheet" />
         <link href="${bootstrapThemeCss}" rel="stylesheet" />
@@ -57,6 +58,7 @@ and open the template in the editor.
         <link href="${bootstrap}" rel="stylesheet" />
         <link href="${bootstrapMin}" rel="stylesheet" />
 	<link href="${styleCss}" rel="stylesheet" />
+	<link href="${styleMobileCss}" rel="stylesheet" />
         <script src="${jquery}"></script>
         <script src="${bootstrapMin}"></script>
         <script src="${bootstrapMinJs}"></script>
@@ -65,7 +67,7 @@ and open the template in the editor.
         <script src="${angularResourceJs}"></script>
         <script src="${angularAnimateJs}"></script>
         <script src="${bootstrapUi}"></script>        
-        <script src="${bootstrapUi}"></script>
+        <script src="${ngDraggable}"></script>
         <script src="${appJs}"></script>
 
     </head>
@@ -73,7 +75,32 @@ and open the template in the editor.
         <!--menu-->
         <c:set var="contextPath" value="${pageContext.request.contextPath }" />
         
-        <div  class="container-fluid" >
+        <div class="row menuHidden" style="margin:0px;display:none;">
+                <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div id="navbar" class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-horiz">
+                            <li class="active"><a href="${contextPath}/object/hello">Home</a></li>
+                            <li  ><a href="${contextPath}/object/galeria">Museu</a></li>
+                            <li  ><a ng-click="openDesafios()">Desafios</a></li>
+                            <li><a href="${contextPath}/object/perguntas">Pergunte ao professor</a></li>
+                            <li><a href="${contextPath}/object/sobre">Sobre o Museu</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+    
+            </div>
+        
+        <div  class="container-fluid mainPage" >
              <div class="col-sm-3" >
                 <div id="menu-title">
                     <div class="row">
@@ -87,7 +114,7 @@ and open the template in the editor.
                         
                         <li><a href="${contextPath}/object/galeria">Galeria</a></li>
                         <li><a href="${contextPath}/object/desafios" >Desafios</a></li>
-                        <li><a href="${contextPath}/object/perguntas">Perguntas</a></li>
+                        <li><a href="${contextPath}/object/perguntas">Pergunte ao professor</a></li>
                         <li><a href="${contextPath}/object/sobre">Sobre o museu</a></li>
                         <li><a href="${contextPath}/object/sobre#nos">Sobre nós</a></li>
                     </ul>
@@ -113,7 +140,7 @@ and open the template in the editor.
                         <div class="carousel-caption">
                             <div class="row">
                                 <div class="page-header">
-                                    <h1 class="text-center" id="main-title">Museu da Política Brasileira</h1>
+                                    <h1 class="text-center" id="main-title">Museu da República</h1>
                                 </div>
                             </div>
                         </div>
@@ -126,8 +153,8 @@ and open the template in the editor.
                                     <div class="row">
                                         <div class="col-sm-4"></div>
                                         <div class="col-sm-4">
-                                            <button type="button" ng-click="redirectGaleria()" class="btn btn-primary" >
-                                                <a href="${contextPath}/object/tour" >Inicie o tour</a>
+                                            <button type="button" class="btn btn-primary" >
+                                                <a style="color:white" href="${contextPath}/object/tour" >Inicie o tour</a>
                                             </button>
                                         </div>
                                         <div class="col-sm-2"></div>
@@ -138,8 +165,8 @@ and open the template in the editor.
                                     <div class="row">
                                         <div class="col-sm-2"></div>
                                         <div class="col-sm-4">
-                                            <button type="button" ng-click="redirectDesafios()" class="btn btn-primary" disabled="true">
-                                                 Teste seus conhecimentos
+                                            <button type="button"  class="btn btn-primary">
+                                                  <a style="color:white" href="${contextPath}/object/desafios" >Teste seus conhecimentos</a>
                                             </button>
                                         </div>
                                         <div class="col-sm-4"></div>

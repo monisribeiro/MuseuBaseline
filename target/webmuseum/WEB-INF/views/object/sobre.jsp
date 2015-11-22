@@ -16,6 +16,7 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <spring:url value="/resources/style.css" var="styleCss" />
+        <spring:url value="/resources/styleMobile.css" var="styleMobileCss" />
         <spring:url value="/resources/bootstrap-theme.css" var="bootstrapThemeCss" />
         <spring:url value="/resources/bootstrap-theme.min.css" var="bootstrapThemeMinCss" />
         <spring:url value="/resources/bootstrap.css" var="bootstrap" />
@@ -32,7 +33,7 @@ and open the template in the editor.
         <spring:url value="/resources/js/ngDraggable.js" var="ngDraggable" />
         <spring:url value="/resources/js/app.js" var="appJs" />
         <spring:url value="/resources/imgs/proc.jpg" var="image" />
-        <spring:url value="/resources/imgs/MuseuPaulista.JPG" var="museu" />
+        <spring:url value="/resources/imgs/sobre.jpg" var="museu" />
         <spring:url value="/resources/imgs/logo.jpg" var="logo" />
         <spring:url value="/resources/imgs/Gabriela.jpg" var="gabriela" />
         <spring:url value="/resources/imgs/Mauricio.jpg" var="mauricio" />
@@ -44,6 +45,7 @@ and open the template in the editor.
         <link href="${bootstrap}" rel="stylesheet" />
         <link href="${bootstrapMin}" rel="stylesheet" />
 	<link href="${styleCss}" rel="stylesheet" />
+	<link href="${styleMobileCss}" rel="stylesheet" />
         <script src="${jquery}"></script>
         <script src="${bootstrapMin}"></script>
         <script src="${bootstrapMinJs}"></script>
@@ -69,54 +71,53 @@ and open the template in the editor.
                     </div>
                     <div id="navbar" class="navbar-collapse collapse">
                         <ul class="nav navbar-nav navbar-horiz">
-                            <li ><a href="${contextPath}/webmuseum/object/hello">Home</a></li>
-                            <li  ><a href="${contextPath}/webmuseum/object/galeria">Museu</a></li>
-                            <li class="dropdown">
-                                <span dropdown on-toggle="toggled(open)">
-                                    <a href id="simple-dropdown" dropdown-toggle>Desafios<span class="caret"></span></a>
-                                    <ul class="dropdown-menu" aria-labelledby="simple-dropdown">
-                                        <li><a href="${contextPath}/webmuseum/object/desafios">Associe as Imagens</a></li>
-                                        <li><a href="${contextPath}/webmuseum/object/desafios">Teste seu Conhecimento</a></li>
-                                    </ul>
-                                </span>
-                            </li>
-                            <li><a href="${contextPath}/webmuseum/object/perguntas">Perguntas</a></li>
-                            <li class="active" ><a href="${contextPath}/webmuseum/object/sobre">Sobre</a></li>
+                            <li ><a href="${contextPath}/MuseuBaseline/object/hello">Home</a></li>
+                            <li  ><a href="${contextPath}/MuseuBaseline/object/galeria">Museu</a></li>
+                            <li  ><a href="${contextPath}/MuseuBaseline/object/desafios">Desafios</a></li>
+                            <li><a href="${contextPath}/MuseuBaseline/object/perguntas">Pergunte ao professor</a></li>
+                            <li class="active" ><a href="${contextPath}/MuseuBaseline/object/sobre">Sobre o museu</a></li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </div>
-        <div class="container-fluid" style="margin-left: 100px;">
+        <div class="container-fluid pageAbout" style="margin-left: 100px;">
             <div class="row" id="/museu">
                 <h2>Sobre o Museu</h2>
             </div>
-            <div class="row" style="padding-top: 30px;">
-                <div class="col-sm-3">
+            <div class="row sobreNos" style="padding-top: 30px;">
+                <div class="col-sm-3 imagem">
                     <img src="${museu}" class="img-circle" alt="Museu Paulista" style="height: 250px; width: 250px;">
                 </div>
-                <div class="col-sm-7">
+                <div class="col-sm-7" style="text-align:justify">
                     <p>
-                        Este é um museu virtual do Museu Paulista, mais conhecido como Museu da Independência. 
-                        Ele está localizado no bairro do Ipiranga em São Paulo e faz parte do conjunto arquitetônico
-                        do Parque da Independência. Atualmente encontra-se fechado para reformas. 
+                        O Palácio Nova Friburgo, atual Palácio do Catete fica no Rio de Janeiro e foi construído 
+                        entre 1858 e 1867 pelo comerciante e fazendeiro de café Antônio Clemente Pinto, Barão de Nova Friburgo. 
+                        Em 18 de abril de 1896, durante o mandato do presidente Prudente de Moraes, 
+                         à época exercido em caráter interino pelo vice Manuel Vitorino, o Palácio foi adquirido pelo Governo Federal
+                         para sediar a Presidência da República, anteriormente instalada no Palácio do Itamaraty.
+                       
                     </p>
                     <p>
-                        O Museu Paulista foi inaugurado em 7 de setembro de 1895 como museu de História Natural e marco 
-                        representativo da Independência, da História do Brasil e Paulista. Seu primeiro núcleo de acervo 
-                        foi a coleção do Coronel Joaquim Sertório, que constituía um museu particular em São Paulo.
+                         
+                         O Palácio consagrou-se como um monumento de grande importância histórica, arquitetônica e artística. 
+                         Do Palácio emergem, memórias de momentos de consternação e comoção nacional, como o velório do presidente Afonso Pena, 
+                         em 1909, e o suicídio de Getúlio Vargas, em 1954, desfecho de uma das mais contundentes crises político-militares republicanas. 
                     </p>
                     <p>
-                        Atualmente, o Museu Paulista possui um acervo de mais de 125.000 unidades, entre objetos, iconografia 
-                        e documentação textual, do século 17 até meados do século 20.
+                         
+                         Com a transferência da Capital Federal para Brasília em 21 de abril de 1960, o Palácio do Catete, 
+                         com base em Decreto Presidencial de 08 de março de 1960, passou então a ser organizado para abrigar o Museu da República,
+                         inaugurado a 15 de novembro do mesmo ano.
+                        
                     </p>
                 </div>
             </div>
-            <div id="/nos" class="row" style="padding-top: 30px;">
+            <div id="nos" class="row " style="padding-top: 30px;">
                 <h2>Sobre Nós</h2>
             </div>
-            <div class="row" style="padding-top: 30px;">
-                <div class="col-sm-3">
+            <div class="row sobreNos" style="padding-top: 30px;">
+                <div class="col-sm-3 imagem">
                     <img src="${logo}" class="img-circle" alt="SoftDesign" style="height: 250px; width: 250px;">
                 </div>
                 <div class="col-sm-7">
@@ -130,18 +131,18 @@ and open the template in the editor.
                     </p>
                     <h3>Nossa Equipe</h3>
                     
-                    <div  class="row" style="padding-top: 10px;">
+                    <div  class="row fotos" style="padding-top: 10px;">
                         <div class="col-sm-4">
-                            <img src="${gabriela}" class="img-circle" alt="Gabriela Martins" style="height: 100px; width: 100px; margin-left: 100px;">
+                            <img src="${gabriela}" class="img-circle imgNos" alt="Gabriela Martins" style="height: 100px; width: 100px; margin-left: 100px;">
                         </div>
                         <div class="col-sm-4">
-                            <img src="${mauricio}" class="img-circle" alt="Mauricio Spinardi" style="height: 100px; width: 100px; margin-left: 100px;">
+                            <img src="${mauricio}" class="img-circle imgNos" alt="Mauricio Spinardi" style="height: 100px; width: 100px; margin-left: 100px;">
                         </div>
                         <div class="col-sm-4">
-                            <img src="${monique}" class="img-circle" alt="Monique Spessoto" style="height: 100px; width: 100px; margin-left: 100px;">
+                            <img src="${monique}" class="img-circle imgNos" alt="Monique Spessoto" style="height: 100px; width: 100px; margin-left: 100px;">
                         </div> 
                     </div>
-                    <div  class="row" style="padding-top: 10px;">
+                    <div  class="row nomes" style="padding-top: 10px;">
                          <div class="col-sm-4">
                              <h4 style="text-align: center">Gabriela Martins</h4>
                         </div>
